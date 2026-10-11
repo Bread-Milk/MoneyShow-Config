@@ -17,12 +17,16 @@ func fail(_ message: String) -> Never {
 
 func validate(_ endpoint: Config.Endpoint, domestic: Bool) {
     let text = endpoint.baseURL.trimmingCharacters(in: .whitespacesAndNewlines)
-    guard !text.contains("\\"), let c = URLComponents(string: text),
+    guard !text.contains("\\"), var c = URLComponents(string: text),
           let host = c.host, !host.isEmpty,
           c.user == nil, c.password == nil, c.query == nil, c.fragment == nil,
-          c.port.map({ (1...65_535).contains($0) }) ?? true,
-          c.scheme?.lowercased() == "https" || (domestic && text == "http://47.120.49.23") else {
-        fail("Invalid endpoint: use an HTTPS base URL without credentials, query or fragment.")
+          c.port.map({ (1...65_535).contains($0) }) ?? true else {
+        fail("Invalid endpoint: credentials, query, fragment and invalid ports are not allowed.")
+    }
+    while c.path.hasSuffix("/") { c.path.removeLast() }
+    let approvedHTTP = domestic ? "http://47.120.49.23" : "http://www.breadmilk.top"
+    guard c.scheme?.lowercased() == "https" || c.url?.absoluteString == approvedHTTP else {
+        fail("Invalid endpoint: use HTTPS or the exact designated HTTP root for this service group.")
     }
 }
 

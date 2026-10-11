@@ -4,8 +4,8 @@
 
 ## 当前配置
 
-- 国内：`http://47.120.49.23`，启用。仅为当前版本已有 HTTP 地址保留兼容；新地址必须使用有效 HTTPS。
-- 海外候选：`https://www.breadmilk.top`，**未启用**。尚未部署 MoneyShow 后端。
+- 国内：`http://47.120.49.23`，启用。
+- 当前已发布的海外候选：`https://www.breadmilk.top`，**未启用**。海外后端已部署；用户要求不使用 HTTPS 证书，正在准备 `http://www.breadmilk.top` 的客户端兼容，尚未发布或启用。
 - `schemaVersion` 为 1，首次 `revision` 为 1。
 
 客户端读取 `server-config.json`，其中 `payload` 是 `endpoints.json` 原始 UTF-8 字节的 Base64，`signature` 是这些字节的 Ed25519 签名。App 内置验证公钥，不能通过修改本仓库的公钥文件更换 App 的信任密钥。
@@ -20,7 +20,7 @@
 ## 更新地址
 
 1. 修改 `endpoints.json`，增加 `revision`。保持 `schemaVersion: 1`。
-2. 先验证新地址的 `/api/v1/health` 返回 `{"ok":true,"service":"moneyshow-server"}`，并验证有效 HTTPS、登录、订阅和识别额度的兼容性。
+2. 先验证新地址的 `/api/v1/health` 返回 `{"ok":true,"service":"moneyshow-server"}`，并验证登录、订阅和识别额度。HTTPS 是一般规则；HTTP 仅允许国内现有地址和用户指定的海外完整根地址 `http://www.breadmilk.top`，不允许额外端口、路径或其他域名。
 3. 在持有签名私钥的 Mac 上执行：
 
 ```sh
@@ -37,7 +37,9 @@ git push origin main
 
 ## 海外入口
 
-部署海外后端并确认 HTTPS、API 和账号/权益兼容后，将海外 `enabled` 改为 `true`，增加 revision，重新签名并发布。App 已有用户保持当前服务组，不因旅行、语言变更或连接超时自动跨组发送登录凭证；启用后可在设置中明确选择服务组。
+海外节点采用独立数据库，账号、订阅和识别额度不自动同步。HTTP 会明文传输客户端凭证和截图。用户确认免证书接入、API 可用性和兼容 App 发布后，才将海外 `baseURL` 改为 `http://www.breadmilk.top`、`enabled` 改为 `true`，增加 revision 并重新签名发布。
+
+TestFlight 1.1.3 (94) 会拒绝海外 HTTP 配置，需更新兼容版本。App 已有用户保持当前服务组，不因旅行、语言变更或连接超时自动跨组发送登录凭证；启用后可在设置中明确选择服务组。使用独立海外账号前，先退出原服务组账号，再切换服务组并重新登录或注册。
 
 ## 回退
 
