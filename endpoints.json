@@ -1,14 +1,14 @@
 {
   "schemaVersion": 1,
-  "revision": 1,
+  "revision": 2,
   "services": {
     "cn": {
       "baseURL": "http://47.120.49.23",
       "enabled": true
     },
     "global": {
-      "baseURL": "https://www.breadmilk.top",
-      "enabled": false
+      "baseURL": "http://www.breadmilk.top",
+      "enabled": true
     }
   }
 }

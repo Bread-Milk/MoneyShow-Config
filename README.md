@@ -5,8 +5,9 @@
 ## 当前配置
 
 - 国内：`http://47.120.49.23`，启用。
-- 当前已发布的海外候选：`https://www.breadmilk.top`，**未启用**。海外后端已部署；用户要求不使用 HTTPS 证书，正在准备 `http://www.breadmilk.top` 的客户端兼容，尚未发布或启用。
-- `schemaVersion` 为 1，首次 `revision` 为 1。
+- 海外：`http://www.breadmilk.top`，启用；用户选择不使用 HTTPS 证书。
+- `schemaVersion` 为 1，当前 `revision` 为 2。
+- TestFlight 1.1.3 (95) 已通过 Apple 处理，在内部 Test 组可测试，支持此海外 HTTP 地址。
 
 客户端读取 `server-config.json`，其中 `payload` 是 `endpoints.json` 原始 UTF-8 字节的 Base64，`signature` 是这些字节的 Ed25519 签名。App 内置验证公钥，不能通过修改本仓库的公钥文件更换 App 的信任密钥。
 
@@ -37,7 +38,7 @@ git push origin main
 
 ## 海外入口
 
-海外节点采用独立数据库，账号、订阅和识别额度不自动同步。HTTP 会明文传输客户端凭证和截图。用户确认免证书接入、API 可用性和兼容 App 发布后，才将海外 `baseURL` 改为 `http://www.breadmilk.top`、`enabled` 改为 `true`，增加 revision 并重新签名发布。
+海外节点采用独立数据库，账号、订阅和识别额度不自动同步。HTTP 会明文传输客户端凭证和截图。用户已确认免证书接入，公网健康检查、登录和合成截图识别验证通过；兼容构建 95 可测试后发布本次 revision 2。
 
 TestFlight 1.1.3 (94) 会拒绝海外 HTTP 配置，需更新兼容版本。App 已有用户保持当前服务组，不因旅行、语言变更或连接超时自动跨组发送登录凭证；启用后可在设置中明确选择服务组。使用独立海外账号前，先退出原服务组账号，再切换服务组并重新登录或注册。
 
